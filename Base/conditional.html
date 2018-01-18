@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>条件渲染</title>
+    <script src="../vue.js"></script>
+  </head>
+  <body>
+      <!-- <h1 v-if="1=2">Yes</h1>
+      <h1 v-else>No</h1> -->
+      <div  id="temp">
+        <template v-if="templ > 0.5">
+          <h1>Title</h1>
+          <p>Paragraph 1</p>
+          <p>Paragraph 2</p>
+        </template>
+      </div>
+
+
+      <div id="ifelse">
+        <div v-if="Math.random() > 0.5">
+          Now you see me
+        </div>
+        <div v-else>
+          Now you don't
+        </div>
+      </div>
+
+      <div id="ifelseif">
+        <div v-if="type === 'A'">
+          A
+        </div>
+        <div v-else-if="type === 'B'">
+          B
+        </div>
+        <div v-else-if="type === 'C'">
+          C
+        </div>
+        <div v-else>
+          Not A/B/C
+        </div>
+      </div>
+
+      <div id="template1">
+        <template v-if="loginType === 'username'">
+          <label>Username</label>
+          <input placeholder="Enter your username" key="username-input">
+        </template>
+        <template v-else>
+          <label>Email</label>
+          <input placeholder="Enter your email address">
+        </template>
+      </div>
+
+      <h1 v-show="ok">Hello!</h1>
+
+
+  </body>
+
+  <script>
+
+      var template = new Vue({
+          el: '#temp',
+          data: {
+            templ: Math.random()
+          }
+      })
+
+      var ifelse = new Vue({
+          el: '#ifelse'
+      })
+
+      var ifelseif = new Vue({
+          el: '#ifelseif',
+          data: {
+            type: 'ABC'
+          }
+      })
+
+      var template1 = new Vue({
+          el: '#template1',
+          data: {
+            loginType: 'username'
+          }
+      })
+
+      var show = new Vue({
+          el: 'h1',
+          data: {
+            ok: '11'
+          }
+      })
+
+  </script>
+</html>

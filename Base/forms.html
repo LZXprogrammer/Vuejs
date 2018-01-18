@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>表单输入绑定</title>
+    <script src="../vue.js"></script>
+  </head>
+  <body>
+
+  <!-- 基础语法 -->
+    <!-- 文本 -->
+    <div id="text">
+      <p>输入文本，及时显示在下方</p>
+      <input v-model="message" placeholder="edit me">
+      <p>Message is : <span v-bind:style="styleObject"> {{ message }} </span></p>
+    </div>
+    <br>
+
+    <!-- 多行文本 -->
+    <div id="multilineText">
+      <p>输入文本，及时显示在下方，支持多行</p>
+      <textarea v-model="message" rows="5" cols="50" placeholder="add multiple lines"></textarea>
+      <br>
+      <p>Multiline Message is : <p style="white-space: pre-line;" v-bind:style="styleObject"> {{ message }} </p> </p>
+    </div>
+    <hr>
+
+    <!-- 复选框 -->
+    <p>复选框</p>
+    <div id="singlecheckbox">
+      <input type="checkbox" id="checkbox" v-model="checked">
+      <label for="checkbox">{{ checked }}</label>
+    </div>
+    <br>
+
+    <!-- 多个复选框 -->
+    <div id='multicheckbox'>
+      <input type="checkbox" id="jack" value="Jack" v-model="checkedNames">
+      <label for="jack">Jack</label>
+      <input type="checkbox" id="john" value="John" v-model="checkedNames">
+      <label for="john">John</label>
+      <input type="checkbox" id="mike" value="Mike" v-model="checkedNames">
+      <label for="mike">Mike</label>
+      <br>
+      <span>Checked names: {{ checkedNames }}</span>
+    </div>
+    <hr>
+
+    <!-- 单选按钮 -->
+    <p>单选按钮</p>
+    <div id="radio">
+      <input type="radio" value="One" v-model="Picked">
+      <label for="one">One</label>
+      <input type="radio" value="Two" v-model="Picked">
+      <label for="two">Two</label>
+      <br>
+      <span>Picked : {{ Picked }}</span>
+    </div>
+    <hr>
+
+    <!-- 下拉列表 -->
+    <p>下拉列表</p>
+    <div id="select">
+      <select v-model="selected">
+        <option disabled value="">-- 请选择 --</option>
+        <option value="Hello">Hello</option>
+        <option value="Vue">Vue</option>
+        <option value="Js">Js</option>
+      </select>
+      <br>
+      <span>Selected : {{ selected }}</span>
+    </div>
+    <br>
+
+    <!-- 下拉多选 -->
+    <p>下拉多选</p>
+    <div id="multiselect">
+      <select v-model="selected" multiple style="width: 50px;">
+        <option>A</option>
+        <option>B</option>
+        <option>C</option>
+      </select>
+      <br>
+      <span>Selected: {{ selected }}</span>
+    </div>
+
+    <!-- 用 v-for 渲染的动态下拉列表选项 -->
+    <p>用 v-for 渲染的动态下拉列表选项</p>
+    <div id="vfor-select">
+      <select v-model="selected">
+        <option disabled value="">-- 请选择 --</option>
+        <option v-for="option in options" :value="option.value">
+          {{ option.text }}
+        </option>
+      </select>
+      <br>
+      <span>Selected: {{ selected }}</span>
+    </div>
+    <hr>
+
+    <!-- 修饰符 -->
+    <input id="number" v-model.number="age" type="number">
+
+
+
+  </body>
+
+  <script>
+
+    // 基础语法 -- 文本
+    var text = new Vue({
+        el: '#text',
+        data: {
+          message: '',
+          styleObject: {
+            color: 'red',
+            fontSize: '22px'
+          }
+        }
+    })
+
+    // 基础语法 -- 文本域
+    var multilineText = new Vue({
+        el: '#multilineText',
+        data: {
+          message: '',
+          styleObject: {
+            color: 'red',
+            fontSize: '22px'
+          }
+        }
+    })
+
+    // 单个复选框
+    var singlecheckbox = new Vue({
+      el: '#singlecheckbox',
+      data: {
+        checked: false
+      }
+    })
+
+    // 多个复选框
+    var multicheckbox = new Vue({
+        el: '#multicheckbox',
+        data: {
+          checkedNames: []
+        }
+    })
+
+    // 单选按钮
+    var radio = new Vue({
+        el: '#radio',
+        data: {
+          Picked: ''
+        }
+    })
+
+    // 下拉列表
+    var select = new Vue({
+        el: '#select',
+        data: {
+          selected: ''
+        }
+    })
+
+    // 下拉多选列表
+    var multiselect = new Vue({
+        el: '#multiselect',
+        data: {
+          selected: []
+        }
+    })
+
+    // 用 v-for 渲染的动态下拉列表选项
+    var vforselect = new Vue({
+        el: '#vfor-select',
+        data: {
+          selected: '',
+          options: [
+            { text: 'One', value: 'A' },
+            { text: 'Two', value: 'B' },
+            { text: 'Three', value: 'C' }
+          ]
+        }
+    })
+
+    // 修饰符
+    new Vue({
+        el: '#number',
+        data: {
+          age: 11
+        }
+    })
+
+
+
+
+  </script>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>重复练习</title>
+    <script src="../vue.js"></script>
+  </head>
+  <body>
+      <!-- v-for 把一个数组对应为一组元素 -->
+      <div id="vforarray1">
+        <p v-for="item of items"> {{ item.message }} </p>
+      </div>
+
+      <!-- v-for 把一个数组对应为一组元素 (加 index) -->
+      <ul id='vforarray2'>
+        <li v-for="(item, index) of items">
+          {{ item.message }} - {{ index }}
+        </li>
+      </ul>
+
+      <!-- 一个对象的 v-for -->
+      <ol id="vforobject">
+        <li v-for="val of object">
+          {{ val }}
+        </li>
+      </ol>
+
+      <!-- 一个对象的 v-for (加 key , index) -->
+      <ul id="vforobject2">
+        <li v-for="(value, key, index) in object">
+          {{ key }} : {{ value }} - {{ index }}
+        </li>
+      </ul>
+
+  </body>
+
+  <script>
+
+      var vforarray1 = new Vue({
+          el: '#vforarray1',
+          data: {
+            items: [
+              { message: 'liu' },
+              { message: 'zhenxing' }
+            ]
+          }
+      })
+
+      var vforarray2 = new Vue({
+          el: '#vforarray2',
+          data: {
+            items: [
+              { message: 'Liu' },
+              { message: 'ZhenXing' }
+            ]
+          }
+      })
+
+      var vforobject = new Vue({
+          el: '#vforobject',
+          data: {
+            object: {
+              Xing: 'Liu',
+              Ming: 'Zhenxing',
+              age: 18
+            }
+          }
+      })
+
+      var vforobject2 = new Vue({
+          el: '#vforobject2',
+          data: {
+            object: {
+              Xing: 'Liu',
+              Ming: 'Zhenxing',
+              age: 18
+            }
+          }
+      })
+
+      var vm = new Vue({
+        data: {
+          a: 1
+        }
+      })
+
+  </script>
+</html>

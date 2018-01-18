@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Class 与 Style 绑定</title>
+    <script src="../vue.js"></script>
+  </head>
+  <body>
+      <!-- ==绑定html Class== -->
+      <!-- #对象语法 -->
+      <div id="htmlclass" class="static"
+          v-bind:class="{ active: isActive, 'text-danger': hasError }">
+      </div>
+
+      <!-- ==绑定内联样式== -->
+      <!-- #对象语法 -->
+      <div id="htmlstyle1" v-bind:style="{ color: activeColor, fontSize: fontSize + 'px' }">test1</div>
+      <div id="htmlstyle2" v-bind:style="styleObject">test2</div>
+
+  </body>
+
+  <script>
+      var htmlclass = new Vue({
+          el: '#htmlclass',
+          data: {
+            isActive: true,
+            hasError: false
+          }
+      })
+
+      // 绑定内联样式 —— #对象语法
+      var htmlstyle1 = new Vue({
+          el: '#htmlstyle1',
+          data: {
+            activeColor: 'red',
+            fontSize: 30
+          }
+      })
+
+      // 绑定内联样式 —— #对象语法 ==== 直接绑定到一个样式对象
+      var htmlstyle2 = new Vue({
+          el: '#htmlstyle2',
+          data: {
+            styleObject: {
+              color: 'red',
+              fontSize: '22px'
+            }
+          }
+      })
+
+  </script>
+</html>

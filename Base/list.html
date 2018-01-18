@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>列表渲染</title>
+    <script src="../vue.js"></script>
+  </head>
+  <body>
+    <!-- 用 v-for 把一个数组对应为一组元素 -->
+
+    <ul id="example-1">
+      <li v-for="item in items">
+        {{ item.message }}
+      </li>
+    </ul>
+
+    <br>
+
+    <ul id='example-2'>
+      <li v-for="(item, index) of items">
+        {{ parentMessage }} - {{ index + 1 }} - {{ item.message }}
+      </li>
+    </ul>
+
+    <hr>
+
+    <!-- 一个对象的 v-for -->
+    <ul id="v-for-object">
+      <li v-for="value in object">
+        {{ value }}
+      </li>
+    </ul>
+
+    <!-- 一个对象的 v-for (加 key, index) -->
+    <ol id="v-for-object2">
+      <li v-for="(value, key, index) of userProfile">
+        {{ key }} : {{ value }} -- {{ index }}
+      </li>
+    </ol>
+    <hr>
+
+    <!-- 显示过滤/排序结果 —— 计算属性 -->
+    <ul id="filter1">
+      <li v-for="n of evennumbers"> {{ n }} </li>
+    </ul>
+
+    <!-- 显示过滤/排序结果 —— 方法 -->
+    <ul id="filter2">
+      <li v-for="n of even(numbers)"> {{ n }} </li>
+    </ul>
+    <hr>
+
+    <!-- 一段取值范围的 v-for -->
+    <div id="range">
+      <span v-for="n in 10"> {{ n }} </span>
+    </div>
+    <hr>
+
+    <!-- 用带有 v-for 的 <template> 渲染多个元素 -->
+    <ul id="more">
+      <template v-for="item in items">
+        <li>{{ item.msg }}</li>
+        <li class="divider">我们不一样</li>
+      </template>
+    </ul>
+
+    <!-- v-for with v-if -->
+    <ul id="for-if">
+      <li v-for="todo in todos" v-if="todo.length">
+        {{ todo }}
+      </li>
+    </ul>
+    <hr>
+
+    <!-- 一个组件的 v-for -->
+    <div id="todo-list-example">
+      <input
+        v-model="newTodoText"
+        @keyup.enter="addNewTodo"
+        placeholder="Add a todo list"
+      >
+      <ul>
+        <li
+          is="todo-item"
+          v-for="(todo, index) in todos"
+          :key="todo.id"
+          :title="todo.title"
+          @remove="todos.splice(index, 1)"
+        ></li>
+      </ul>
+    </div>
+
+
+  </body>
+
+  <script>
+
+      // 用 v-for 把一个数组对应为一组元素
+      var example1 = new Vue({
+        el: '#example-1',
+        data: {
+          items: [
+            { message: 'Foo' },
+            { message: 'Bar' }
+          ]
+        }
+      })
+
+      var example2 = new Vue({
+          el: '#example-2',
+          data: {
+            parentMessage: 'Parent',
+            items: [
+              { message: 'Foo' },
+              { message: 'Bar' }
+            ]
+          }
+      })
+
+      // 一个对象的 v-for
+      var vforObject = new Vue({
+          el: '#v-for-object',
+          data: {
+            object: {
+              aa: 'Liu',
+              bb: 'ZhenXing'
+            }
+          }
+      })
+
+      var vforObject2 = new Vue({
+          el: '#v-for-object2',
+          data: {
+            userProfile: {
+              name: 'Anika'
+            }
+          }
+      })
+
+      // Vue.set -- 全局设置，给谁设置都可以, 应该一次只能设置一个值
+      Vue.set(vforObject2.userProfile, 'age', 27);
+
+      // object.$set 实例方法，它只是全局 Vue.set 的别名，应该一次只能设置一个值
+      // vforObject2.$set(vforObject2.userProfile, 'age', 27)
+
+
+      // vforObject2.userProfile = vforObject2.assign({}, vforObject2.userProfile, {
+      //   age: 27,
+      //   favoriteColor: 'Vue Green'
+      // })
+
+      // 显示过滤/排序结果 -- 计算属性
+      var filter1 = new Vue({
+          el: '#filter1',
+          data: {
+            numbers: [1, 2, 3, 4, 5]
+          },
+          computed: {
+            evennumbers: function () {
+              // console.log(numbers)
+              return this.numbers.filter(function (numbers) {
+                return numbers % 2 === 0;
+              })
+            }
+          }
+      })
+
+      // 显示过滤/排序结果 -- 方法
+      var filter2 = new Vue({
+          el: '#filter2',
+          data: {
+            numbers: [1, 2, 3, 4, 5]
+          },
+          methods: {
+            even: function () {
+              return this.numbers.filter(function (numbers) {
+                return numbers % 3 === 0;
+              })
+            }
+          }
+      })
+
+      // 一段取值范围的 v-for
+      var range = new Vue({
+          el: '#range'
+      })
+
+      // 带有 v-for 的 <template> 渲染多个元素
+      new Vue({
+          el: '#more',
+          data: {
+            items: [
+              { msg: 'Hello' },
+              { msg: 'World' }
+            ]
+          }
+      })
+
+      // v-for with v-if
+      var forif = new Vue({
+          el: '#for-if',
+          data: {
+            todos: {
+              self: 'hello',
+              haha: 'world'
+            }
+          }
+      })
+
+      // 一个组件的 v-for
+      Vue.component('todo-item', {
+        template: '\
+          <li>\
+            {{ title }}\
+            <button v-on:click="$emit(\'remove\')">X</button>\
+          </li>\
+        ',
+        props: ['title']
+      })
+
+      new Vue({
+        el: '#todo-list-example',
+        data: {
+          newTodoText: '',
+          todos: [
+            {
+              id: 1,
+              title: 'Do the dishes',
+            },
+            {
+              id: 2,
+              title: 'Take out the trash',
+            },
+            {
+              id: 3,
+              title: 'Mow the lawn'
+            }
+          ],
+          nextTodoId: 4
+        },
+        methods: {
+          addNewTodo: function () {
+            this.todos.push({
+              id: this.nextTodoId++,
+              title: this.newTodoText
+            })
+            this.newTodoText = ''
+          }
+        }
+      })
+
+  </script>
+</html>

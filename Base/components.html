@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>组件</title>
+    <script src="../vue.js"></script>
+  </head>
+  <body>
+
+    <!-- 全局注册组件事例 -->
+    <div id="mycomponent1">
+      <my-component1></my-component1>
+    </div>
+
+    <!-- 局部注册组件事例 -->
+    <div id="mycomponent2">
+      <my-component2></my-component2>
+    </div>
+
+    <!-- DOM 模板解析注意事项 -->
+    <table id="myrow">
+      <tr is="my-row"></tr>
+    </table>
+    <hr>
+
+    <!--  -->
+    <div id="example-2">
+      <simple-counter></simple-counter>
+      <simple-counter></simple-counter>
+      <simple-counter></simple-counter>
+    </div>
+
+  </body>
+
+  <script>
+
+    // ========== 全局注册组件 ===========
+
+    // 注册一个全局组件 , 要放在根实例前
+    Vue.component('my-component1', {
+        template: '<div>A Global component!</div>'
+    })
+    // 创建根实例
+    var mycomponent1 = new Vue({
+        el: '#mycomponent1'
+    })
+
+    // ========== 局部注册组件 ===========
+
+    // 定义一个 DOM 模版
+    var Child = {
+        template: '<div>A Local component!</div>'
+    }
+    // 通过 mycomponent2 Vue实例/组件的实例选项, components 注册仅在其作用域中可用的组件：
+    var mycomponent2 = new Vue({
+        el: '#mycomponent2',
+        components: {
+          'my-component2': Child
+        }
+    })
+
+    // DOM 模板解析注意事项
+    var tr = {
+        template: '<tr>hhhahhahaha</tr>'
+    }
+    var myrow = new Vue({
+        el: '#myrow',
+        components: {
+          'my-row': tr
+        }
+    })
+
+    var data = { counter: 0 }
+
+    Vue.component('simple-counter', {
+      template: '<button v-on:click="counter += 1">{{ counter }}</button>',
+      // 技术上 data 的确是一个函数了，因此 Vue 不会警告，
+      // 但是我们却给每个组件实例返回了同一个对象的引用
+      data: function () {
+        return data
+      }
+    })
+
+    new Vue({
+      el: '#example-2'
+    })
+
+
+
+
+  </script>
+</html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>事件处理</title>
+    <script src="../vue.js"></script>
+  </head>
+  <body>
+
+    <!-- 监听事件 v-on:click 可以简写成 @click -->
+    <div id="clickeven1">
+      <button type="button" v-on:click="counter += 1" >Add 1</button>
+      <p>The button above has been clicked
+        <span v-bind:style="styleObject">{{ counter }}</span> times.</p>
+    </div>
+    <hr>
+
+    <!-- 事件处理方法 -->
+    <div id="clickeven2">
+      <!-- `greet` 是在下面定义的方法名 -->
+      <button v-on:click="greet">Greet</button>
+    </div>
+    <hr>
+
+    <!-- 内联处理器中的方法 -->
+    <div id="clickeven3">
+      <button v-on:click="say('goodby')">Say Goodby</button>
+      <button v-on:click="say('hi')">Say Hi</button>
+    </div>
+
+    <div id="clickeven4">
+      <button v-on:click="warn('Form cannot be submitted yet.', $event)">
+        Submit
+      </button>
+    </div>
+    <hr>
+
+    <!-- 事件修饰符 -->
+
+    <!-- 阻止单击事件冒泡 -->
+    <div id="parent" @click='doThis' style="width:100px;height: 100px; background: red;">
+      点击父元素
+      <a v-on:click.stop="doThis1">点击子元素</a>
+    </div>
+    <br>
+
+    <!-- 点击事件将只会触发一次 -->
+    <a id="click-a" v-on:click.once="doThis"><button>点我有奖励</button></a>
+    <br>
+
+    <button id="exact" @click.ctrl="onCtrlClick">A</button>
+
+  </body>
+
+  <script>
+
+    // 监听事件 --- 点击按钮，监听记录点击次数
+    var clickeven1 = new Vue({
+        el: '#clickeven1',
+        data: {
+          counter: 0,
+          styleObject: {
+            color: 'red',
+            fontSize: '22px'
+          }
+        }
+    })
+
+    // 事件处理方法
+    var clickeven2 = new Vue({
+        el: '#clickeven2',
+        data: {
+          name: 'Vue.js'
+        },
+        methods: {
+          greet: function (event) {
+            alert('Hello ' + this.name)
+
+            // `event` 是原生 DOM 事件
+            if (event) {
+              alert(event.target.tagName)
+            }
+          }
+        }
+    })
+
+    // 内联处理器中的方法
+    var clickeven3 = new Vue({
+        el: '#clickeven3',
+        methods: {
+          say: function (msg) {
+            console.log(msg);
+          }
+        }
+    })
+
+    var clickeven4 = new Vue({
+        el: '#clickeven4',
+        methods: {
+          warn: function (message, event) {
+            // 现在我们可以访问原生事件对象
+            if (event) event.preventDefault()
+            alert(message)
+          }
+        }
+    })
+
+    // == 事件修饰符 ==
+     // 阻止单击事件冒泡
+    var parent = new Vue({
+        el: '#parent',
+        methods: {
+          doThis: function () {
+            alert('haha')
+          },
+          doThis1: function () {
+            alert('heiehi')
+          }
+        }
+    })
+
+    // 点击事件将只会触发一次
+    var clicka = new Vue({
+        el: '#click-a',
+        methods: {
+          doThis: function () {
+            alert('woyo, 崩溃了！')
+          }
+        }
+    })
+
+    var exact = new Vue({
+        el: '#exact',
+        methods: {
+          onCtrlClick: function () {
+            alert(11)
+          }
+        }
+    })
+
+
+
+  </script>
+</html>
