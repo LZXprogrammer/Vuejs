@@ -7,35 +7,61 @@
   </head>
   <body>
 
-    <!-- 全局注册组件事例 -->
+    <p>全局注册组件事例:</p>
     <div id="mycomponent1">
       <my-component1></my-component1>
-    </div>
+    </div><br>
 
-    <!-- 局部注册组件事例 -->
+    <p>局部注册组件事例:</p>
     <div id="mycomponent2">
       <my-component2></my-component2>
-    </div>
+    </div><br>
 
     <!-- DOM 模板解析注意事项 -->
+    <p>DOM 模板解析注意事项:</p>
     <table id="myrow">
       <tr is="my-row"></tr>
     </table>
     <hr>
 
-    <!-- data 必须是函数 -->
-    <div id="data-func">
+    <p>data 必须是函数:</p>
+    <div id="datafunction">
       <simple-counter></simple-counter>
       <simple-counter></simple-counter>
       <simple-counter></simple-counter>
+    </div><br>
+
+    <p>使用 Prop 传递数据:</p>
+    <div id="propinfo">
+      <child message="hello!"></child>
+    </div><br>
+
+    <p>camelCase (驼峰式命名)的 prop 需要转换为相对应的 kebab-case (短横线分隔式命名)：</p>
+    <div id="kebab-case">
+      <child my-message="hello!"></child>
+    </div><br>
+
+    <p>动态 Prop</p>
+    <div id="dynamicprop">
+      <input v-model="parentMessage">
+      <br>
+      <child :my-message="parentMessage"></child>
     </div>
+
     <hr>
 
-    <!-- 组件组合 -->
-      <!-- 使用 Prop 传递数据 -->
-      <div id="prop-msg">
-        <child message="hello"></child>
-      </div>
+    <p>自定义事件</p>
+    <div id="counter-event-example">
+      <p>{{ total }}</p>
+      <button-counter v-on:increment="incrementTotal"></button-counter>
+      <button-counter v-on:increment="incrementTotal"></button-counter>
+    </div>
+
+    <p>使用自定义事件的表单输入组件</p>
+    <div id="customcomponent">
+      <currency-input v-model="price"></currency-input>
+    </div>
+
 
 
 
@@ -47,9 +73,8 @@
 
     // 注册一个全局组件 , 要放在根实例前
     Vue.component('my-component1', {
-        template: '<div>A Global component!</div>'
+        template: '<div>A Global Component !</div>'
     })
-    // 创建根实例
     var mycomponent1 = new Vue({
         el: '#mycomponent1'
     })
@@ -58,9 +83,8 @@
 
     // 定义一个 DOM 模版
     var Child = {
-        template: '<div>A Local component!</div>'
+        template: '<div>A Local Component !!</div>'
     }
-    // 通过 mycomponent2 Vue实例/组件的实例选项, components 注册仅在其作用域中可用的组件：
     var mycomponent2 = new Vue({
         el: '#mycomponent2',
         components: {
@@ -70,7 +94,7 @@
 
     // DOM 模板解析注意事项
     var tr = {
-        template: '<tr>hhhahhahaha</tr>'
+        template: '<tr>这里是个测试 DOM</tr>'
     }
     var myrow = new Vue({
         el: '#myrow',
@@ -79,28 +103,115 @@
         }
     })
 
-    // data 必须是函数
+    // data 必须是一个函数
     var data = { counter: 0 }
     Vue.component('simple-counter', {
-      template: '<button v-on:click="counter += 1">{{ counter }}</button>',
-      // 技术上 data 的确是一个函数了，因此 Vue 不会警告，
-      // 但是我们却给每个组件实例返回了同一个对象的引用
-      data: function () {
-        return { counter: 0 }
-      }
+        template: '<button v-on:click="counter += 1">{{ counter }}</button>',
+        data: function () {
+          return { counter: 0 }
+        }
     })
-    var datafunc = new Vue({
-      el: '#data-func'
+    var datafunction = new Vue({
+        el: '#datafunction'
     })
 
-    // ====== 组件组合 ======
     // 使用 Prop 传递数据
     Vue.component('child', {
-      props: ['message'],
-      template: '<span>{{ message }}</span>'
+        props: ['message'],
+        template: '<span>{{ message }}</span>'
     })
-    var propmsg = new Vue({
-        el: '#prop-msg'
+    var propinfo = new Vue({
+        el: '#propinfo'
+    })
+
+    // camelCase vs. kebab-case
+    Vue.component('child', {
+        props: ['myMessage'],
+        template: '<span>{{ myMessage }}</span>'
+    })
+    var kebabcase = new Vue({
+        el: '#kebab-case'
+    })
+
+    // 动态 Prop
+    Vue.component('child', {
+        props: ['myMessage'],
+        template: '<span>{{ myMessage }}</span>'
+    })
+    var dynamicprop = new Vue({
+        el: '#dynamicprop',
+        data: {
+          parentMessage: 'Hello World'
+        }
+    })
+
+    // ======== 自定义组件 ========
+    // 使用 v-on 绑定自定义事件
+
+    Vue.component('button-counter', {
+        template: '<button v-on:click="incrementCounter">{{ counter }}</button>',
+        data: function () {
+          return { counter: 0 }
+        },
+        methods: {
+          incrementCounter: function () {
+            this.counter += 1;
+            this.$emit('increment');
+          }
+        }
+    })
+    var countereventexample = new Vue({
+        el: '#counter-event-example',
+        data: {
+          total: 0
+        },
+        methods: {
+          incrementTotal: function () {
+            this.total += 1;
+          }
+        }
+    })
+
+    // 使用自定义事件的表单输入组件
+    Vue.component('currency-input', {
+      template: '\
+        <span>\
+          $\
+          <input\
+            ref="input"\
+            v-bind:value="value"\
+            v-on:input="updateValue($event.target.value)"\
+          >\
+        </span>\
+      ',
+      props: ['value'],
+      methods: {
+        // 不是直接更新值，而是使用此方法来对输入值进行格式化和位数限制
+        updateValue: function (value) {
+          var formattedValue = value
+            // 删除两侧的空格符
+            .trim()
+            // 保留 2 位小数
+            .slice(
+              0,
+              value.indexOf('.') === -1
+                ? value.length
+                : value.indexOf('.') + 3
+            )
+          // 如果值尚不合规，则手动覆盖为合规的值
+          if (formattedValue !== value) {
+            this.$refs.input.value = formattedValue
+          }
+          // 通过 input 事件带出数值
+          this.$emit('input', Number(formattedValue))
+        }
+      }
+    })
+    var customcomponent = new Vue({
+        el: '#customcomponent',
+        data: {
+          price: ''
+        }
     })
 
 
