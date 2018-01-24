@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>渲染函数 & JSX</title>
+    <script src="../vue.js"></script>
+  </head>
+  <body>
+
+    <p>渲染函数——基础 ：</p>
+    <div id="rendeexample">
+      <anchored-heading :level="1">Hello world!</anchored-heading>
+    </div>
+
+  </body>
+  <script>
+
+    // 渲染函数——基础
+    Vue.component('anchored-heading', {
+      render: function (createElement) {
+        return createElement(
+          'h' + this.level,   // tag name 标签名称
+          this.$slots.default // 子组件中的阵列
+        )
+      },
+      props: {
+        level: {
+          type: Number,
+          required: true
+        }
+      }
+    })
+    new Vue({
+      el: '#rendeexample'
+    })
+
+  </script>
+</html>
