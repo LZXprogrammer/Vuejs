@@ -6,30 +6,51 @@
     <script src="../vue.js"></script>
   </head>
   <body>
+
+    <p>自定义聚焦指令 和 过滤器 一同使用 :</p>
     <div id="filter-example">
-      <input type="text" v-model="message">
+      <input type="text" v-model="message" v-focus>
       <p>{{ message | capitalize }}</p>
     </div>
   </body>
 
   <script>
 
+    // 注册一个全局自定义指令 `v-focus`
+    Vue.directive('focus', {
+        // 当被绑定的元素插入到 DOM 中时……
+        inserted: function (el) {
+          // 聚焦元素
+          el.focus()
+        }
+    })
     // 过滤器
     var filterexample = new Vue({
         el: '#filter-example',
         data: function () {
           return {
-            message: 'john'
+            message: 'liu zhenxing'
           }
         },
         filters: {
           capitalize: function (value) {
-            if (!value) return ''
-            value = value.toString()
-            return value.charAt(0).toUpperCase() + value.slice(1)
+            // 把每个字符转成小写
+            var arr = value.toLowerCase();
+            // 按空格分成数组
+            var strarr = arr.split(' ');
+            var result = '';
+            // 循环把数组的每个值的第一个字符变成大写
+            for(var i in strarr){
+              result += strarr[i].substring(0,1).toUpperCase()+strarr[i].substring(1)+' ';
+            }
+            if (!value) return '';
+            // value = value.toString()
+            // return value.toUpperCase()
+            return result;
           }
         }
     })
+
 
   </script>
 </html>
