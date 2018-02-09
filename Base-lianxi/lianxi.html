@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <script src="../vue.js"></script>
+  </head>
+  <body>
+    <div id="example">
+      <example></example>
+    </div>
+  </body>
+
+  <script>
+
+
+    var Example = Vue.extend({
+      template: '<div>{{ message }}</div>',
+      data: function () {
+        return {
+          message: 'Hello Vue!'
+        }
+      }
+    })
+    Vue.component('example', Example);
+    new Vue({
+      el: 'example'
+    })
+
+
+  </script>
+
+</html>
