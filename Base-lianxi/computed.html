@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>计算属性和侦听器</title>
+    <script src="../vue.js"></script>
+  </head>
+  <body>
+    <div id="example">
+      <p>Original message: "{{ message }}"</p>
+      <p>Computed reversed message: "{{ reversedMessage }}"</p>
+    </div>
+    <hr>
+
+    <div id="example2">
+      <p>Original message: "{{ message }}"</p>
+      <p>Reversed message: "{{ reversedMessage() }}"</p>
+    </div>
+    <hr>
+
+    <div id="example3">
+      {{ fullName }}
+    </div>
+    <hr>
+
+    <div id="example4">
+      {{ fullName }}
+    </div>
+    <hr>
+
+    <div id="example5">
+      {{ fullName }}
+    </div>
+    <hr>
+
+    <!-- 侦听器 -->
+    <div id="watch-example">
+      <p>
+        Ask a yes/no question:
+        <input v-model="question" placeholder="Please input infomation" style="width:200px;">
+      </p>
+      <p>{{ answer }}</p>
+    </div>
+
+
+
+  </body>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
+
+  <script>
+
+    /**
+     * 计算属性是基于它们的依赖进行缓存的，只要 message 不改变，
+     * 多次访问 reversedMessage 计算属性会立即返回之前的计算结果，而不必再次执行函数
+     */
+    var example = new Vue({
+        el: '#example',
+        data: {
+          message: 'Hello VueJS!'
+        },
+        computed: {
+          // 计算属性的 getter
+          reversedMessage: function () {
+            return this.message.split("").reverse().join("")
+          }
+        }
+    })
+
+    /**
+     * 相比之下，每当触发重新渲染时，调用方法将总会再次执行函数
+     */
+    var example2 = new Vue({
+        el: '#example2',
+        data: {
+          message: 'METHODS'
+        },
+        methods: {
+          reversedMessage: function () {
+            return this.message.split("").reverse().join("")
+          }
+        }
+    })
+
+    /**
+     * 侦听属性
+     */
+    var example3 = new Vue({
+        el: '#example3',
+        data: {
+          firstName: 'a',
+          lastName: 'b',
+          fullName: 'ab',
+        },
+        watch: {
+          firstName: function (val) {
+            this.fullName = val + this.lastName
+          },
+          lastName: function (val) {
+            this.fullName = this.firstName + val
+          }
+        }
+    })
+
+    /**
+     * 计算属性
+     */
+    var example4 = new Vue({
+        el: '#example4',
+        data: {
+          firstName: 'q',
+          lastName: 'w',
+        },
+        computed: {
+          fullName: function () {
+            return this.firstName + '&' + this.lastName
+          }
+        }
+    })
+
+    /**
+     * 计算属性的 setter
+     */
+    var example5 = new Vue({
+        el: '#example5',
+        data: {
+          firstName: 'z',
+          lastName: 'x',
+        },
+        computed: {
+          fullName: {
+            // getter
+            get: function () {
+              return this.firstName + ' ' + this.lastName
+            },
+            // setter
+            set: function (newValue) {
+              var names = newValue.split(' ');
+              this.firstName = names[0];
+              this.lastName = names[names.length - 1];
+            }
+          }
+        }
+    })
+
+    var watch = new Vue({
+        el: '#watch-example',
+        data: {
+          question: '',
+          answer: 'I cannot give you an answer until you ask a question!'
+        },
+        watch: {
+          question: function (newQuestion, oldQuestion) {
+            this.answer = 'Waiting for you to stop typing...'
+            this.getAnswer()
+          }
+        },
+        methods: {
+          // `_.debounce` 是一个通过 Lodash 限制操作频率的函数。
+          // 在这个例子中，我们希望限制访问 yesno.wtf/api 的频率
+          // AJAX 请求直到用户输入完毕才会发出。想要了解更多关于
+          // `_.debounce` 函数 (及其近亲 `_.throttle`) 的知识，
+          // 请参考：https://lodash.com/docs#debounce
+          getAnswer: _.debounce(
+            function () {
+              if (this.question.indexOf('?') === -1) {
+                this.answer = 'Questions usually contain a question mark. ;-)'
+                return false;
+              }
+              this.answer = 'Thinking...'
+
+              var vm = this;
+              axios.get('https://yesno.wtf/api')
+                .then(function (response) {
+                  vm.answer = _.capitalize(response.data.answer)
+                })
+                .catch(function (error) {
+                  vm.answer = 'Error! Could not reach the API. ' + error
+                })
+            },
+            500
+          )
+        }
+    })
+
+
+
+
+
+  </script>
+</html>
