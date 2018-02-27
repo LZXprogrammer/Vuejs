@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>条件渲染</title>
+    <script src="../vue.js"></script>
+  </head>
+  <body>
+
+    <h1 v-if='ok'>Yes</h1>
+    <h1 v-else>No</h1>
+
+    <div id="condition1">
+      <template v-if="nihao">
+        <h1>Title</h1>
+        <p>Paragraph 1</p>
+        <p>Paragraph 2</p>
+      </template>
+    </div>
+    <hr>
+
+    <div id="condition2">
+      <div v-if="Math.random() > 0.5">
+        Now you see me
+      </div>
+      <div v-else>
+        Now you don't
+      </div>
+    </div>
+    <hr>
+
+    <div id="condition3">
+      <div v-if="type === 'A'">
+        A
+      </div>
+      <div v-else-if="type === 'B'">
+        B
+      </div>
+      <div v-else-if="type === 'C'">
+        C
+      </div>
+    </div>
+    <hr>
+
+    <!-- 用 key 管理可复用的元素 -->
+    <!-- 添加 key 属性后，就会阻止 vue 复用已有元素，没有 key 的标签则依然会复用 -->
+    <div id="condition4">
+      <!-- <div v-if="loginType === 'username'">
+        <label>Username</label>
+        <input placeholder="Enter your username">
+      </div>
+      <div v-else>
+        <label>Email</label>
+        <input placeholder="Enter your Email">
+      </div> -->
+      <template v-if="loginType === 'username'">
+        <label>Username</label>
+        <input placeholder="Enter your username" key="username-input">
+      </template>
+      <template v-else>
+        <label>Email</label>
+        <input placeholder="Enter your email address" key="username-input">
+      </template>
+      <button @click="toggleLoginType">Toggle login type</button>
+    </div>
+
+
+  </body>
+
+  <script>
+
+    var condition1 = new Vue({
+        el: '#condition1',
+        data: {
+          nihao: true
+        }
+    })
+
+    var condition2 = new Vue({
+        el: '#condition2'
+    })
+
+    var condition3 = new Vue({
+        el: '#condition3',
+        data: {
+          type: 'A'
+        }
+    })
+
+    var condition4 = new Vue({
+        el: '#condition4',
+        data: {
+          loginType: 'username'
+        },
+        methods: {
+          toggleLoginType: function () {
+            return this.loginType = this.loginType === 'username' ? 'email' : 'username'
+          }
+        }
+    })
+
+  </script>
+</html>
