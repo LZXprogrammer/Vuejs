@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>列表渲染</title>
+    <script src="../vue.js"></script>
+  </head>
+  <body>
+
+    <div id="example1">
+      <ul>
+        <li v-for="item in items">
+          {{ item.message }}
+        </li>
+      </ul>
+    </div>
+    <hr>
+
+    <div id="example2">
+      <ul>
+        <li v-for="(item, index) of items">
+          {{ index }} -- {{ item.message }}
+        </li>
+      </ul>
+    </div>
+    <hr>
+
+    <div id="v-for-object">
+      <ul>
+        <li v-for="value in object">
+          {{ value }}
+        </li>
+      </ul>
+    </div>
+    <hr>
+
+    <div id="v-for-object2">
+      <ul>
+        <li v-for="(value, key) of object">
+          {{ key }} : {{ value }}
+        </li>
+      </ul>
+    </div>
+    <hr>
+
+    <div id="v-for-object3">
+      <ul>
+        <li v-for="(value, key, index) of object">
+          {{ index }} - {{ key }} : {{ value }}
+        </li>
+      </ul>
+    </div>
+    <hr>
+
+    <div id="v-for-object4">
+      <p v-for="item in items" :key="item.id">
+        {{ item.msg }}
+      </p>
+    </div>
+    <hr>
+
+    <div id="example7">
+      <ul>
+        <li v-for="n in evenNumbers">
+          {{ n }}
+        </li>
+      </ul>
+    </div>
+    <hr>
+
+    <div id="example8">
+      <ul>
+        <li v-for="n in even(numbers)">
+          {{ n }}
+        </li>
+      </ul>
+    </div>
+    <hr>
+
+    <div id="example9">
+      <span v-for="n in 10">{{ n }} </span>
+    </div>
+    <hr>
+
+    <ul id="example10">
+      <template v-for="item in items">
+        <li>{{ item.msg }}</li>
+        <li class="divider"></li>
+      </template>
+    </ul>
+    <hr>
+
+    <div id="example11">
+      <ul v-if="todos.length">
+        <li v-for="(todo, index) in todos">
+          {{ todo }} -- {{ index }}
+        </li>
+      </ul>
+      <p v-else>No todos left!</p>
+    </div>
+    <hr>
+
+
+    <!-- todo list 的完整例子 -->
+    <div id="todo-list-example">
+      <input
+        v-model="newTodoText"
+        v-on:keyup.enter="addNewTodo"
+        placeholder="Add a todo"
+      >
+      <ul>
+        <li
+          is="todo-item"
+          v-for="(todo, index) in todos"
+          v-bind:key="todo.id"
+          v-bind:title="todo.title"
+          v-on:remove="todos.splice(index, 1)"
+        ></li>
+      </ul>
+    </div>
+
+  </body>
+
+  <script>
+    var example1 = new Vue({
+        el: '#example1',
+        data: {
+          items: [
+            { message: 'foo' },
+            { message: 'bar' },
+           ]
+        }
+    })
+
+    var example2 = new Vue({
+        el: '#example2',
+        data: {
+          items: [
+            { message: 'foo' },
+            { message: 'bar' },
+            { message: 'baz' },
+           ]
+        }
+    })
+
+    var example3 = new Vue({
+        el: '#v-for-object',
+        data: {
+          object: {
+            firstName: 'Hello',
+            lastName: 'World',
+            age: 24,
+          }
+        }
+    })
+
+    var example4 = new Vue({
+        el: '#v-for-object2',
+        data: {
+          object: {
+            firstName: 'Hello',
+            lastName: 'World',
+            age: 24,
+          }
+        }
+    })
+
+    var example5 = new Vue({
+        el: '#v-for-object3',
+        data: {
+          object: {
+            firstName: 'Hello',
+            lastName: 'World',
+            age: 24,
+          }
+        }
+    })
+
+    var example6 = new Vue({
+        el: '#v-for-object4',
+        data: {
+          items: [
+            { msg: 'a', id: 1 },
+            { msg: 'b', id: 2 },
+            { msg: 'c', id: 3 },
+          ]
+        }
+    })
+
+    /**
+     * Vue 包含一组观察数组的 变异方法 (mutation method)
+     *
+     * 变异方法： 会改变被这些方法调用的原始数组
+     */
+    // push('N 个数据')    ————  在数组最后增加 N 个数据
+    // pop()     ————  无参数，删除数组最后一条数据
+    // shift()   ————  无参数，删除数组第一条数据
+    // unshift('N 个数据') ————  增加 N 个数据放在数组的最前
+    // splice('第几个开始', '删除的个数')  ————  两个参数，按条件删除
+    // sort()  ————  给数组排序
+    // reserve()  ————  颠倒数组顺序  example: 原数组：12345  颠倒后数组：54321
+
+    /**
+     * Vue 包含一组观察数组的 非变异方法 (non-mutating method)
+     *
+     * 非变异方法： 不会改变原始数组，但总是返回一个新数组。
+     */
+    // filter(), concat() 和 slice()
+
+    var example7 = new Vue({
+        el: '#example7',
+        data: {
+          numbers: [ 1, 2, 3, 4, 5 ]
+        },
+        computed: {
+          evenNumbers: function () {
+            return this.numbers.filter(function (numbers) {
+              return numbers % 2 === 0;
+            })
+          }
+        }
+    })
+
+    var example8 = new Vue({
+        el: '#example8',
+        data: {
+          numbers: [ 1, 2, 3, 4, 5 ]
+        },
+        methods: {
+          even: function (numbers) {
+            return numbers.filter(function (number) {
+              return number % 2 === 0
+            })
+          }
+        }
+    })
+
+    var example9 = new Vue({
+        el: '#example9',
+        data: {
+          numbers: [ 1, 2, 3, 4, 5 ]
+        }
+    })
+
+    var example10 = new Vue({
+        el: '#example10',
+        data: {
+          items: [
+            { msg: 'aaa' },
+            { msg: 'bbb' },
+            { msg: 'ccc' },
+          ]
+        }
+    })
+
+    var example11 = new Vue({
+        el: '#example11',
+        data: {
+          todos: [
+            1
+          ]
+        }
+    })
+
+    Vue.component('todo-item', {
+      template: '\
+        <li>\
+          {{ title }}\
+          <button v-on:click="$emit(\'remove\')">X</button>\
+        </li>\
+      ',
+      props: ['title']
+    })
+
+    new Vue({
+      el: '#todo-list-example',
+      data: {
+        newTodoText: '',
+        todos: [
+          {
+            id: 1,
+            title: 'Do the dishes',
+          },
+          {
+            id: 2,
+            title: 'Take out the trash',
+          },
+          {
+            id: 3,
+            title: 'Mow the lawn'
+          }
+        ],
+        nextTodoId: 4
+      },
+      methods: {
+        addNewTodo: function () {
+          this.todos.push({
+            id: this.nextTodoId++,
+            title: this.newTodoText
+          })
+          this.newTodoText = ''
+        }
+      }
+    })
+
+
+
+  </script>
+</html>
