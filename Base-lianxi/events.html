@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>事件处理</title>
+    <script src="../vue.js"></script>
+  </head>
+  <body>
+    <div id="example1">
+      <button v-on:click="counter += 1">Add 1</button>
+      <p>The button above has been clicked {{ counter }} times.</p>
+    </div>
+    <hr>
+
+    <div id="example2">
+      <!-- `greet` 是在下面定义的方法名 -->
+      <button v-on:click="greet">Greet</button>
+    </div>
+    <hr>
+
+    <div id="example3">
+      <!-- `greet` 是在下面定义的方法名 -->
+      <button v-on:click="say('hi')">say Hi</button>
+      <button v-on:click="say('what')">say What</button>
+    </div>
+    <hr>
+
+
+
+
+  </body>
+
+  <script>
+
+    var example1 = new Vue({
+        el: '#example1',
+        data: {
+          counter: 0
+        }
+    })
+
+    var example2 = new Vue({
+        el: '#example2',
+        data: {
+          name: 'lzx'
+        },
+        methods: {
+          greet: function () {
+            if (event) {
+              alert(event.target.tagName)
+            }
+          }
+        }
+    })
+
+    var example3 = new Vue({
+        el: '#example3',
+        methods: {
+          say: function (message) {
+            alert(message)
+          }
+        }
+    })
+
+  </script>
+</html>
